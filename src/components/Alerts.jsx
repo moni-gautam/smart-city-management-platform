@@ -1,12 +1,20 @@
 function Alerts() {
   return (
-    <div className="card">
-      <h2>Active Alerts</h2>
+<div className="space-y-4">
 
-      <p>⚠ Traffic Congestion High</p>
-      <p>⚠ AQI Above Safe Limit</p>
-      <p>⚠ Bin B12 Full</p>
-    </div>
+  <div className="bg-red-600 p-4 rounded-xl">
+    ⚠ High Traffic at Central Square
+  </div>
+
+  <div className="bg-yellow-600 p-4 rounded-xl">
+    ⚠ AQI Above Safe Limit
+  </div>
+
+  <div className="bg-red-600 p-4 rounded-xl">
+    ⚠ Waste Bin Full
+  </div>
+
+</div>
   );
 }
 
