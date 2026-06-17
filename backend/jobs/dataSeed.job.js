@@ -1,6 +1,7 @@
 const cron = require("node-cron");
 const Sensor = require("../models/Sensor.model");
 const Alert = require("../models/Alert.model");
+const { getIO } = require("../config/socket");
 
 const SENSORS = [
   { sensorId: "TRAFFIC-001", type: "traffic", unit: "vehicles/min", zone: "Varanasi Central", lat: 25.3176, lng: 82.9739, min: 30, max: 220 },
@@ -22,6 +23,8 @@ const randomValue = (min, max) =>
   Math.round((Math.random() * (max - min) + min) * 10) / 10;
 
 const seedData = async () => {
+  const newReadings = [];
+
   for (const s of SENSORS) {
     const value = randomValue(s.min, s.max);
     const limits = THRESHOLDS[s.type];
@@ -29,7 +32,7 @@ const seedData = async () => {
       value >= limits.critical ? "critical" :
       value >= limits.warning  ? "warning"  : "normal";
 
-    await Sensor.create({
+    const sensor = await Sensor.create({
       sensorId: s.sensorId,
       type: s.type,
       value,
@@ -38,12 +41,14 @@ const seedData = async () => {
       status,
     });
 
+    newReadings.push(sensor);
+
     if (status !== "normal") {
       const existing = await Alert.findOne({
         sensorId: s.sensorId, status: "active"
       });
       if (!existing) {
-        await Alert.create({
+        const alert = await Alert.create({
           type: s.type,
           severity: status,
           message: `${s.type.replace("_", " ")} level ${value} exceeded ${status} threshold at ${s.zone}`,
@@ -53,10 +58,20 @@ const seedData = async () => {
           sensorId: s.sensorId,
           status: "active",
         });
+
+        try {
+          getIO().emit("alert:new", alert);
+        } catch (e) {}
+
         console.log(`Alert created: ${status} ${s.type} at ${s.zone}`);
       }
     }
   }
+
+  try {
+    getIO().emit("sensor:update", newReadings);
+  } catch (e) {}
+
   console.log(`Sensor data seeded at ${new Date().toLocaleTimeString()}`);
 };
 
