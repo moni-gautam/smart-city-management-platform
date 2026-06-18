@@ -1,52 +1,12 @@
-import {
-  useEffect,
-  useState,
-} from "react";
-
-function HealthScore({
-  score = 0,
-}) {
-
-  const [
-    displayScore,
-    setDisplayScore,
-  ] = useState(0);
-
-  useEffect(() => {
-
-    let current = 0;
-
-    const timer =
-      setInterval(() => {
-
-        current++;
-
-        setDisplayScore(current);
-
-        if (
-          current >= score
-        ) {
-          clearInterval(timer);
-        }
-
-      }, 15);
-
-    return () =>
-      clearInterval(timer);
-
-  }, [score]);
-
-  let borderColor =
-    "border-green-500";
+function HealthScore({ score = 0 }) {
+  let borderColor = "border-green-500";
 
   if (score < 70) {
-    borderColor =
-      "border-yellow-500";
+    borderColor = "border-yellow-500";
   }
 
   if (score < 50) {
-    borderColor =
-      "border-red-500";
+    borderColor = "border-red-500";
   }
 
   return (
@@ -55,48 +15,34 @@ function HealthScore({
       bg-slate-800
       rounded-2xl
       p-6
-      h-[400px]
       flex
       flex-col
       items-center
       justify-center
       "
     >
-      <h2
-        className="
-        text-xl
-        font-bold
-        "
-      >
+      <h2 className="text-xl font-bold mb-4">
         City Health Score
       </h2>
 
       <div
         className={`
-        w-40
-        h-40
+        w-28
+        h-28
         rounded-full
         border-8
         ${borderColor}
         flex
         items-center
         justify-center
-        mx-auto
-        mt-5
-        text-5xl
+        text-3xl
         font-bold
       `}
       >
-        {displayScore}
+        {score}
       </div>
 
-      <p
-        className="
-        mt-4
-        text-lg
-        font-semibold
-        "
-      >
+      <p className="mt-4 text-lg font-semibold">
         {score >= 80
           ? "🟢 Excellent"
           : score >= 60
@@ -105,7 +51,6 @@ function HealthScore({
           ? "🟠 Warning"
           : "🔴 Critical"}
       </p>
-
     </div>
   );
 }

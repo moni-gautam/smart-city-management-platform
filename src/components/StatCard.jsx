@@ -62,7 +62,15 @@ console.log(CountUp);
 
 function StatCard({ title, value, icon }) {
   return (
-    <div className="bg-slate-800 rounded-2xl p-6">
+    <div className="
+bg-gradient-to-r
+from-slate-800
+to-slate-900
+rounded-2xl
+p-5
+shadow-xl
+h-[170px]
+">
       <div>{icon}</div>
 
       <h3>{String(title)}</h3>

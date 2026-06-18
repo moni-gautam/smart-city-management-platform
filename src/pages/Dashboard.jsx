@@ -113,169 +113,141 @@ const healthScore =
       );
 const previousScore = healthScore - 3;
 
-  return (
-    <div className="flex min-h-screen bg-slate-950 text-white">
-      <Sidebar />
-      <div className="flex-1 p-8">
-        <Navbar />
+ return (
+  <div className="flex min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mt-8">
+    <Sidebar />
 
+    <div className="flex-1 p-8">
 
-        {/* <StatCard
-  title="Traffic"
-  value={
-    sensorData?.traffic?.value?.toFixed(1) ||
-    "Loading..."
-  }
- icon="🚦"
-/>
+      <Navbar />
 
-<StatCard
-  title="Waste"
-  value={
-    sensorData?.waste?.value?.toFixed(1) ||
-    "Loading..."
-  }
-  // icon={<FaTrash />}
-  icon="🗑️"
-/>
+      {/* TOP SECTION */}
+      <div className="grid lg:grid-cols-6 gap-6 mt-8">
 
-<StatCard
-  title="AQI"
-  value={
-    sensorData?.air_quality?.value?.toFixed(1) ||
-    "Loading..."
-  }
-  // icon={<FaCloud />}
-   icon="🚦"
-/>
+        <HealthScore
+          score={healthScore}
+          trend={healthScore - previousScore}
+        />
 
-<StatCard
-  title="Energy"
-  value={
-    sensorData?.energy?.value?.toFixed(1) ||
-    "Loading..."
-  }
-  icon={<FaBolt />}
-/>
+        <StatCard
+          title="Traffic"
+          value={
+            sensorData?.traffic?.value?.toFixed(1) ||
+            "Loading..."
+          }
+          icon="🚦"
+        />
 
-<StatCard
-  title="Water"
-  value={
-    sensorData?.water?.value?.toFixed(1) ||
-    "Loading..."
-  }
-  icon={<FaTint />}
-/> */}
-<StatCard
-  title="Traffic"
-  value={
-    sensorData?.traffic?.value?.toFixed(1) ||
-    "Loading..."
-  }
-  icon="🚦"
-/>
+        <StatCard
+          title="Waste"
+          value={
+            sensorData?.waste?.value?.toFixed(1) ||
+            "Loading..."
+          }
+          icon="🗑️"
+        />
 
-<StatCard
-  title="Waste"
-  value={
-    sensorData?.waste?.value?.toFixed(1) ||
-    "Loading..."
-  }
-  icon="🗑️"
-/>
+        <StatCard
+          title="AQI"
+          value={
+            sensorData?.air_quality?.value?.toFixed(1) ||
+            "Loading..."
+          }
+          icon="🌫️"
+        />
 
-<StatCard
-  title="AQI"
-  value={
-    sensorData?.air_quality?.value?.toFixed(1) ||
-    "Loading..."
-  }
-  icon="🌫️"
-/>
+        <StatCard
+          title="Energy"
+          value={
+            sensorData?.energy?.value?.toFixed(1) ||
+            "Loading..."
+          }
+          icon="⚡"
+        />
 
-<StatCard
-  title="Energy"
-  value={
-    sensorData?.energy?.value?.toFixed(1) ||
-    "Loading..."
-  }
-  icon="⚡"
-/>
+        <StatCard
+          title="Water"
+          value={
+            sensorData?.water?.value?.toFixed(1) ||
+            "Loading..."
+          }
+          icon="💧"
+        />
 
-<StatCard
-  title="Water"
-  value={
-    sensorData?.water?.value?.toFixed(1) ||
-    "Loading..."
-  }
-  icon="💧"
-/>
-
-
-        </div>
-
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-8">
-          <div className="xl:col-span-2">
-            <TrafficChart />
-          </div>
-         <HealthScore
-  score={healthScore}
-  trend={healthScore - previousScore}
-/>
-        </div>
-        <div className="mt-4 text-sm text-slate-400">
-  <p>🟢 Normal: {normal}</p>
-  <p>🟡 Warning: {warning}</p>
-  <p>🔴 Critical: {critical}</p>
-</div>
-
-        <div className="mt-6">
-          <ActivityFeed />
-        </div>
-
-        <div className="mt-8"></div>
-
-        <div className="mt-8">
-          <CityMap />
-        </div>
-        <div className="mt-8">
-          <AIRecommendations />
-          <div className="mt-8">
-  <EmergencyCommand />
-</div>
-        </div>
-
-  <div className="mt-8">
-  <RiskHeatmap
-    sensorData={sensorData}
-  />
-</div>
-<div className="mt-8">
-  <PredictiveInsights
-    sensorData={sensorData}
-  />
-</div>
-
-        <RiskZones />
-   <div className="mt-8">
-  <PredictiveAnalytics />
-</div>
-        <div className="mt-8">
-          <CityStats />
-        </div>
-
-
-        <div className="mt-8">
-  <CityAICopilot
-    sensorData={sensorData}
-    alerts={alerts}
-  />
-</div>
       </div>
+
+      <div className="flex gap-8 mt-4 text-sm text-slate-400">
+
+        <p>🟢 Normal: {normal}</p>
+
+        <p>🟡 Warning: {warning}</p>
+
+        <p>🔴 Critical: {critical}</p>
+
+      </div>
+
+      {/* TRAFFIC + HEATMAP */}
+
+      <div className="grid lg:grid-cols-3 gap-6 mt-8">
+
+        <div className="lg:col-span-2">
+          <TrafficChart />
+        </div>
+
+        <RiskHeatmap
+          sensorData={sensorData}
+        />
+
+      </div>
+
+      {/* ACTIVITY + EMERGENCY */}
+
+      <div className="grid lg:grid-cols-2 gap-6 mt-8">
+
+        <ActivityFeed />
+
+        <EmergencyCommand />
+
+      </div>
+
+      {/* AI COPILOT + PREDICTIONS */}
+
+      <div className="grid lg:grid-cols-2 gap-6 mt-8">
+
+        <CityAICopilot
+          sensorData={sensorData}
+          alerts={alerts}
+        />
+
+        <PredictiveInsights
+          sensorData={sensorData}
+        />
+
+      </div>
+
+      {/* MAP */}
+
+      <div className="mt-8">
+
+        <CityMap />
+
+      </div>
+
+      {/* RECOMMENDATIONS + STATS */}
+
+      <div className="grid lg:grid-cols-2 gap-6 mt-8">
+
+        <AIRecommendations />
+
+        <CityStats />
+
+      </div>
+
     </div>
-  );
+
+  </div>
+);
 }
 
 export default Dashboard;
