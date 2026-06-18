@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
+import socket from "../services/socket";
 
 export function useSensorData() {
   const [latest, setLatest] = useState(null);
@@ -17,10 +18,24 @@ export function useSensorData() {
   };
 
   useEffect(() => {
+    // Initial fetch
     fetchLatest();
-    // Refresh every 30 seconds to match seed job
+
+    // Socket.io — listen for real-time sensor updates
+    // When backend emits "sensor:update", update our state instantly
+    socket.on("sensor:update", (newReadings) => {
+      console.log("Live sensor update received:", newReadings.length, "readings");
+      // Re-fetch latest to get updated values per type
+      fetchLatest();
+    });
+
+    // Fallback polling every 30s in case socket disconnects
     const interval = setInterval(fetchLatest, 30000);
-    return () => clearInterval(interval);
+
+    return () => {
+      socket.off("sensor:update");
+      clearInterval(interval);
+    };
   }, []);
 
   return { latest, loading };
@@ -52,8 +67,25 @@ export function useAlerts() {
 
   useEffect(() => {
     fetchAlerts();
+
+    // Socket.io — listen for new alerts in real-time
+    // When backend creates an alert, show it instantly without waiting 30s
+    socket.on("alert:new", (newAlert) => {
+      console.log("New alert received:", newAlert.severity, newAlert.type);
+      setAlerts((prev) => {
+        // Avoid duplicate alerts
+        const exists = prev.find((a) => a._id === newAlert._id);
+        if (exists) return prev;
+        return [newAlert, ...prev];
+      });
+    });
+
     const interval = setInterval(fetchAlerts, 30000);
-    return () => clearInterval(interval);
+
+    return () => {
+      socket.off("alert:new");
+      clearInterval(interval);
+    };
   }, []);
 
   return { alerts, loading, resolveAlert };
@@ -68,6 +100,17 @@ export function useRecommendations() {
       .then((res) => setRecommendations(res.data.recommendations))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
+
+    // Refresh recommendations every time new sensor data arrives
+    socket.on("sensor:update", () => {
+      API.get("/resources/recommendations")
+        .then((res) => setRecommendations(res.data.recommendations))
+        .catch((err) => console.log(err));
+    });
+
+    return () => {
+      socket.off("sensor:update");
+    };
   }, []);
 
   return { recommendations, loading };

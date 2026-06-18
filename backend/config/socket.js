@@ -5,8 +5,9 @@ let io;
 const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL || "http://localhost:3000",
+      origin: ["http://localhost:5173", "http://localhost:3000"],
       methods: ["GET", "POST"],
+      credentials: true
     },
   });
 
@@ -20,7 +21,6 @@ const initSocket = (server) => {
   return io;
 };
 
-// Call this anywhere in the app to emit events
 const getIO = () => {
   if (!io) throw new Error("Socket.io not initialized");
   return io;
