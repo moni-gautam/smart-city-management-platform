@@ -1,31 +1,38 @@
+import { useEffect, useState } from "react";
+import { getSensorStats } from "../services/api";
+
 function CityStats() {
-  const stats = [
-    {
-      title: "Population Monitored",
-      value: "1.2M",
-      icon: "👥",
-    },
-    {
-      title: "Active Sensors",
-      value: "4,532",
-      icon: "📡",
-    },
-    {
-      title: "Connected Devices",
-      value: "12,832",
-      icon: "🔗",
-    },
-    {
-      title: "Departments Online",
-      value: "5",
-      icon: "🏢",
-    },
-    {
-      title: "Incidents Today",
-      value: "12",
-      icon: "🚨",
-    },
-  ];
+
+  const [stats, setStats] =
+    useState([]);
+
+  useEffect(() => {
+
+    const loadStats =
+      async () => {
+
+        try {
+
+          const result =
+            await getSensorStats();
+
+          setStats(
+            result.stats
+          );
+
+        } catch (error) {
+
+          console.error(
+            error
+          );
+
+        }
+
+      };
+
+    loadStats();
+
+  }, []);
 
   return (
     <div className="bg-slate-800 rounded-2xl p-6">
@@ -34,11 +41,12 @@ function CityStats() {
         🌍 City Statistics
       </h2>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
 
-        {stats.map((stat, index) => (
+        {stats.map((stat) => (
+
           <div
-            key={index}
+            key={stat._id}
             className="
               bg-slate-700
               rounded-xl
@@ -46,19 +54,19 @@ function CityStats() {
               text-center
             "
           >
-            <div className="text-3xl">
-              {stat.icon}
-            </div>
 
-            <h3 className="mt-2 text-slate-300">
-              {stat.title}
+            <h3 className="text-slate-300">
+              {stat._id.toUpperCase()}
             </h3>
 
-            <p className="text-2xl font-bold mt-2">
-              {stat.value}
+            <p className="text-3xl font-bold mt-2">
+
+              {stat.count}
+
             </p>
 
           </div>
+
         ))}
 
       </div>

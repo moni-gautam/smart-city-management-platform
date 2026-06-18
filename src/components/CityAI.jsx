@@ -1,122 +1,113 @@
 import { useState } from "react";
 
 function CityAI() {
-  const [open, setOpen] = useState(false);
-  const [question, setQuestion] = useState("");
-  const [response, setResponse] = useState("");
+  const [question, setQuestion] =
+    useState("");
+
+  const [answer, setAnswer] =
+    useState("");
 
   const handleAsk = () => {
-    const q = question.toLowerCase();
 
-    if (q.includes("traffic")) {
-      setResponse(
-        "🚦 Lanka Crossing currently has the highest congestion (82%)."
+    const q =
+      question.toLowerCase();
+
+    if (
+      q.includes("highest risk")
+    ) {
+      setAnswer(
+        "🚨 Assi Ghat is currently the highest risk zone due to elevated water and environmental readings."
       );
-    } else if (q.includes("aqi")) {
-      setResponse(
-        "🌫 AQI is currently 178 and exceeds the recommended safe limit."
+    }
+
+    else if (
+      q.includes("traffic")
+    ) {
+      setAnswer(
+        "🚦 Traffic congestion is currently highest near Varanasi Central."
       );
-    } else if (q.includes("emergency")) {
-      setResponse(
-        "🚑 3 active emergency incidents are currently being handled."
+    }
+
+    else if (
+      q.includes("aqi")
+    ) {
+      setAnswer(
+        "🌫 AQI levels are elevated in Lanka zone."
       );
-    } else if (q.includes("waste")) {
-      setResponse(
-        "🗑 12 waste bins require immediate collection."
+    }
+
+    else if (
+      q.includes("energy")
+    ) {
+      setAnswer(
+        "⚡ Energy consumption is unusually high in Orderly Bazar."
       );
-    } else {
-      setResponse(
-        "🤖 No specific data found. Try asking about traffic, AQI, waste, or emergencies."
+    }
+
+    else {
+      setAnswer(
+        "🤖 No recommendation available for this query."
       );
     }
   };
 
   return (
-    <>
-      {/* Floating Button */}
+    <div className="bg-slate-800 rounded-2xl p-6 mt-8">
 
-      <button
-        onClick={() => setOpen(!open)}
-        className="
-          fixed
-          bottom-6
-          right-6
-          bg-cyan-500
-          hover:bg-cyan-600
-          text-white
-          px-5
-          py-3
-          rounded-full
-          shadow-xl
-          font-bold
-          z-50
-        "
-      >
-        🤖 City AI
-      </button>
+      <h2 className="text-2xl font-bold mb-4">
+        🤖 City AI Copilot
+      </h2>
 
-      {/* Chat Window */}
+      <div className="flex gap-3">
 
-      {open && (
-        <div
+        <input
+          value={question}
+          onChange={(e) =>
+            setQuestion(
+              e.target.value
+            )
+          }
+          placeholder="Ask about city status..."
           className="
-            fixed
-            bottom-24
-            right-6
-            w-[380px]
-            bg-slate-800
-            rounded-2xl
-            shadow-2xl
-            p-5
-            z-50
+          flex-1
+          bg-slate-700
+          rounded-xl
+          px-4
+          py-3
+          outline-none
+          "
+        />
+
+        <button
+          onClick={handleAsk}
+          className="
+          bg-cyan-500
+          px-5
+          rounded-xl
+          font-semibold
           "
         >
-          <h2 className="text-xl font-bold mb-4">
-            Smart City AI Assistant
-          </h2>
+          Ask
+        </button>
 
-          <input
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            placeholder="Ask about city status..."
-            className="
-              w-full
-              p-3
-              rounded-lg
-              bg-slate-700
-              outline-none
-              mb-3
-            "
-          />
+      </div>
 
-          <button
-            onClick={handleAsk}
-            className="
-              bg-cyan-500
-              hover:bg-cyan-600
-              px-4
-              py-2
-              rounded-lg
-            "
-          >
-            Ask AI
-          </button>
+      {answer && (
 
-          {response && (
-            <div
-              className="
-                mt-4
-                bg-slate-700
-                p-3
-                rounded-lg
-              "
-            >
-              {response}
-            </div>
-          )}
+        <div
+          className="
+          mt-4
+          bg-slate-700
+          p-4
+          rounded-xl
+          "
+        >
+          {answer}
         </div>
+
       )}
-    </>
+
+    </div>
   );
 }
 
